@@ -4,7 +4,7 @@ pipeline {
     }
     stages {
         stage('Image Build') {
-            parallel(
+            parallel{
                 stage('Front-End checkout') {
                         steps {
                             git url: 'https://github.com/jang2162/jang2162-frontend-start.git'
@@ -17,7 +17,7 @@ pipeline {
                         sh 'npm install'
                     }
                 }
-            )
+            }
         }
     }
 }
