@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'node:16' }
+        docker {
+            image 'node:16'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
     stages {
         stage('Image Build') {
@@ -11,7 +14,6 @@ pipeline {
                             git url: 'https://github.com/jang2162/jang2162-frontend-start.git'
                             script {
                                 def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                echo "jang2162-frontend-start commit_id : ${commit_id}"
                                 docker.build("jang2162-frontend-start:${commit_id}", "-f Dockerfile")
                             }
                         }
@@ -23,7 +25,6 @@ pipeline {
                             git url: 'https://github.com/jang2162/jang2162-backend-start.git'
                             script {
                                 def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                echo "jang2162-backend-start commit_id : ${commit_id}"
                                 docker.build("jang2162-backend-start:${commit_id}", "-f Dockerfile")
                             }
                         }
