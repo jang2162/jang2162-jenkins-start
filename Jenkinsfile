@@ -30,6 +30,9 @@ pipeline {
                         dir('backend') {
                             git url: 'https://github.com/jang2162/jang2162-backend-start.git'
                             configFileProvider([configFile(fileId: 'ENV_BACK_END_DEV', variable: 'BACK_END_ENV')]) {
+                                sh 'echo $BACK_END_ENV'
+                                sh 'cat $BACK_END_ENV'
+                                sh 'mv $BACK_END_ENV .env'
                                 sh 'npm install && npm run build'
                                 script {
                                     def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
