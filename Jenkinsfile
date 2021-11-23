@@ -15,7 +15,7 @@ pipeline {
                             script {
                                 def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
                                 sh 'pwd'
-                                sh 'lf -al'
+                                sh 'ls -al'
                                 docker.build("jang2162-frontend-start:${commit_id}".trim(), './')
                             }
                         }
@@ -28,7 +28,7 @@ pipeline {
                             script {
                                 def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
                                 sh 'pwd'
-                                sh 'lf -al'
+                                sh 'ls -al'
                                 docker.build("jang2162-backend-start:${commit_id}".trim(), './')
                             }
                         }
