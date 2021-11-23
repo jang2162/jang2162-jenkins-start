@@ -12,10 +12,15 @@ pipeline {
                     steps {
                         dir('frontend') {
                             git url: 'https://github.com/jang2162/jang2162-frontend-start.git'
-                            sh 'npm install && npm run build'
-                            script {
-                                def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                docker.build("jang2162-frontend-start:${commit_id}".trim(), './')
+                            configFileProvider([configFile(fileId: 'ENV_FRONT_END_DEV', variable: 'FRONT_END_ENV')]) {
+                                sh 'echo $FRONT_END_ENV'
+                                sh 'cat $FRONT_END_ENV'
+                                sh 'mv $FRONT_END_ENV .env'
+                                sh 'npm install && npm run build'
+                                script {
+                                    def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                                    docker.build("jang2162-frontend-start:${commit_id}".trim(), './')
+                                }
                             }
                         }
                     }
@@ -24,10 +29,12 @@ pipeline {
                     steps {
                         dir('backend') {
                             git url: 'https://github.com/jang2162/jang2162-backend-start.git'
-                            sh 'npm install && npm run build'
-                            script {
-                                def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                docker.build("jang2162-backend-start:${commit_id}".trim(), './')
+                            configFileProvider([configFile(fileId: 'ENV_BACK_END_DEV', variable: 'BACK_END_ENV')]) {
+                                sh 'npm install && npm run build'
+                                script {
+                                    def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                                    docker.build("jang2162-backend-start:${commit_id}".trim(), './')
+                                }
                             }
                         }
                     }
