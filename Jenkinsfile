@@ -6,7 +6,7 @@ pipeline {
         }
     }
     stages {
-        stage('Image Build') {
+        stage('Image Build / Push') {
             parallel{
                 stage('Front-End') {
                     steps {
@@ -17,7 +17,12 @@ pipeline {
                                 sh 'npm install && npm run build'
                                 script {
                                     def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                    docker.build("jang2162-frontend-start:${commit_id}".trim(), './')
+                                    def app = docker.build("jang2162/frontend-start")
+                                    docker.withRegistry('http://registry') {
+                                        echo "==${commit_id}=="
+                                        app.push("${commit_id}".trim())
+                                        app.push("latest")
+                                    }
                                 }
                             }
                         }
@@ -32,7 +37,12 @@ pipeline {
                                 sh 'npm install && npm run build'
                                 script {
                                     def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                                    docker.build("jang2162-backend-start:${commit_id}".trim(), './')
+                                    def app = docker.build("jang2162/backend-start")
+                                    docker.withRegistry('http://registry') {
+                                        echo "==${commit_id}=="
+                                        app.push("${commit_id}".trim())
+                                        app.push("latest")
+                                    }
                                 }
                             }
                         }
