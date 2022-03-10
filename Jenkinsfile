@@ -18,7 +18,7 @@ pipeline {
                                 script {
                                     def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
                                     def app = docker.build("jang2162/frontend-start")
-                                    docker.withRegistry('http://registry:5000') {
+                                    docker.withRegistry('http://10.10.0.10:5000') {
                                         app.push("${commit_id}".trim())
                                         app.push("latest")
                                     }
@@ -37,7 +37,7 @@ pipeline {
                                 script {
                                     def commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
                                     def app = docker.build("jang2162/backend-start")
-                                    docker.withRegistry('http://registry:5000') {
+                                    docker.withRegistry('http://10.10.0.10:5000') {
                                         app.push("${commit_id}".trim())
                                         app.push("latest")
                                     }
